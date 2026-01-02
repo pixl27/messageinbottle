@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cosmic Ocean | Message in a Bottle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        /* --- Core Atmosphere --- */
+        :root {
+            --glass-color: rgba(100, 200, 210, 0.4);
+            --glass-shine: rgba(255, 255, 255, 0.6);
+            --cork-color: #8B4513;
+            --paper-color: #f4e4bc;
+            --ocean-dark: #02001c;
+            --ocean-light: #0d1b3e;
+            --ocean-mid: #1a3c5a;
+        }
+
+        body {
+            background-color: #000;
+            overflow: hidden;
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            height: 100vh;
+            width: 100vw;
+            user-select: none;
+        }
+
+        /* --- Sky & Milky Way --- */
+        #sky {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 50% 100%, #1a103c 0%, #000000 100%);
+            z-index: 0;
+        }
+
+        .milky-way {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(ellipse at center, rgba(138, 43, 226, 0.1) 0%, transparent 40%),
+                radial-gradient(ellipse at center, rgba(0, 191, 255, 0.05) 0%, transparent 50%);
+            transform: rotate(-45deg);
+            filter: blur(30px);
+            z-index: 0;
+        }
+
+        .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            animation: twinkle var(--duration) ease-in-out infinite;
+            animation-delay: var(--delay);
+        }
+
+        @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.2); box-shadow: 0 0 4px white; }
+        }
+
+        .shooting-star {
+            position: absolute;
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 50%, rgba(255,255,255,0) 100%);
+            opacity: 0;
+            transform: rotate(-45deg);
+            z-index: 1;
+        }
+
+        @keyframes shoot {
+            0% { transform: translateX(0) translateY(0) rotate(-45deg) scale(0.5); opacity: 1; }
+            100% { transform: translateX(-300px) translateY(300px) rotate(-45deg) scale(0.5); opacity: 0; }
+        }
+
+        /* --- Ocean --- */
+        #ocean {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background: linear-gradient(to bottom, #0a152e 0%, #000000 100%);
+            z-index: 10;
+            overflow: hidden;
+            box-shadow: 0 -20px 50px rgba(0,0,0,0.8);
+        }
+        
+        #ocean::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at 50% 0%, rgba(20, 50, 80, 0.3), transparent 70%);
+            animation: ocean-pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes ocean-pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.6; }
+        }
+
+        .wave-layer {
+            position: absolute;
+            width: 250%;
+            height: 100%;
+            background-repeat: repeat-x;
+            background-position: 0 bottom;
+            animation: wave-move linear infinite;
+        }
+        
+        .wave-shape {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 88.7'%3E%3Cpath d='M800 56.9c-155.5 0-204.9-50-405.5-49.9-200 0-250 49.9-394.5 49.9v31.8h800v-.2-31.6z' fill='%23FFFFFF'/%3E%3C/svg%3E");
+        }
+
+        .w1 { 
+            bottom: -10px; opacity: 0.03; height: 110%; z-index: 1; 
+            animation-duration: 25s; 
+            filter: blur(2px);
+        }
+        .w2 { 
+            bottom: 5px; opacity: 0.05; height: 90%; z-index: 2; 
+            animation-duration: 20s; animation-direction: reverse; 
+        }
+        .w3 { 
+            bottom: 15px; opacity: 0.08; height: 70%; z-index: 3; 
+            animation-duration: 15s; 
+        }
+        .w4 {
+            bottom: 25px; opacity: 0.05; height: 50%; z-index: 4;
+            animation-duration: 35s; animation-direction: reverse;
+        }
+
+        @keyframes wave-move {
+            0% { transform: translateX(0) translateZ(0); }
+            100% { transform: translateX(-50%) translateZ(0); }
+        }
+
+        /* --- Reflection on water --- */
+        .reflection {
+            position: absolute;
+            top: -50px;
+            left: 0;
+            width: 100%;
+            height: 120px;
+            background: linear-gradient(to bottom, rgba(150, 180, 255, 0.08), transparent);
+            filter: blur(15px);
+            z-index: 15;
+            animation: glimmer 5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glimmer {
+            0% { opacity: 0.5; transform: scaleY(1); }
+            100% { opacity: 0.8; transform: scaleY(1.1); }
+        }
+
+        /* --- UI Elements --- */
+        #ui-layer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding-bottom: 100px;
+        }
+
+        .interactive {
+            pointer-events: auto;
+        }
+
+        .btn-main {
+            padding: 10px 30px;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50px;
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .btn-main:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: white;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .title-text {
+            font-size: 1.2rem;
+            letter-spacing: 0.3em;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.6);
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px rgba(100,200,255,0.2);
+            text-transform: uppercase;
+        }
+        
+        @media (min-width: 768px) {
+            .title-text { font-size: 1.8rem; }
+        }
+
+        /* --- The Bottle Modal (Writing) --- */
+        #write-modal {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+            z-index: 200;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        #write-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .paper-sheet {
+            width: 85%;
+            max-width: 450px;
+            min-height: 350px;
+            background: #f4e4bc;
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.05) 1px, transparent 1px),
+                url("https://www.transparenttextures.com/patterns/aged-paper.png"); 
+            background-size: 100% 30px, auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            padding: 30px;
+            border-radius: 2px;
+            transform: rotate(-1deg);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .paper-sheet::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            box-shadow: inset 0 0 50px rgba(139, 69, 19, 0.2);
+            pointer-events: none;
+        }
+
+        textarea {
+            width: 100%;
+            flex-grow: 1;
+            background: transparent;
+            border: none;
+            resize: none;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.4rem;
+            color: #3e2723;
+            line-height: 30px;
+            outline: none;
+            margin-bottom: 15px;
+        }
+
+        textarea::placeholder {
+            color: rgba(62, 39, 35, 0.4);
+        }
+
+        /* --- The Bottle (SVG) & Animation Classes --- */
+        .bottle-container {
+            position: absolute;
+            width: 100px;
+            height: 250px;
+            bottom: 50px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            z-index: 50;
+            pointer-events: none;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.5));
+            transform-origin: center bottom;
+            --throw-offset: 0vw;
+            --throw-scale: 0.2;
+            --throw-bottom: 30%;
+        }
+
+        .bottle-svg {
+            width: 100%;
+            height: 100%;
+            overflow: visible;
+        }
+
+        /* Animation: Prepare to Throw */
+        .bottle-prepare {
+            animation: prepare 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        }
+        @keyframes prepare {
+            0% { transform: translateX(-50%) scale(0) rotate(0deg); bottom: -300px; }
+            100% { transform: translateX(-50%) scale(1.5) rotate(10deg); bottom: 10%; }
+        }
+
+        /* Animation: Throw */
+        .bottle-throw {
+            animation: throwBottle 2.5s cubic-bezier(0.45, 0.05, 0.55, 0.95) forwards;
+        }
+        @keyframes throwBottle {
+            0% { transform: translateX(-50%) scale(1.5) rotate(10deg); bottom: 10%; opacity: 1; }
+            20% { transform: translateX(calc(-50% + (var(--throw-offset) * 0.2))) scale(1.2) rotate(-5deg); bottom: 50%; }
+            100% { 
+                transform: translateX(calc(-50% + var(--throw-offset))) scale(var(--throw-scale)) rotate(45deg); 
+                bottom: var(--throw-bottom); 
+                opacity: 1; 
+            }
+        }
+
+        /* Animation: Floating */
+        .bottle-float {
+            position: absolute;
+            width: 40px; 
+            height: 100px;
+            z-index: 20;
+            cursor: pointer;
+            pointer-events: auto;
+            transform-origin: center 75%;
+            animation: 
+                floatY 4s ease-in-out infinite,
+                floatRotate 5.5s ease-in-out infinite,
+                drift 40s linear infinite alternate;
+        }
+
+        @keyframes floatY {
+            0%, 100% { top: auto; bottom: calc(var(--base-bottom) - 5px); }
+            50% { top: auto; bottom: calc(var(--base-bottom) + 15px); }
+        }
+
+        @keyframes floatRotate {
+            0% { transform: scale(var(--scale)) rotate(8deg); }
+            50% { transform: scale(var(--scale)) rotate(-8deg); }
+            100% { transform: scale(var(--scale)) rotate(8deg); }
+        }
+
+        @keyframes drift {
+            0% { margin-left: -40px; }
+            100% { margin-left: 40px; }
+        }
+        
+        .bottle-float:hover {
+            filter: brightness(1.3) drop-shadow(0 0 10px rgba(255,255,255,0.4));
+        }
+
+        /* --- Splash Effect --- */
+        .splash {
+            position: absolute;
+            bottom: 30%;
+            left: 50%;
+            width: 100px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transform: translateX(-50%) scale(0);
+            opacity: 0.8;
+            z-index: 18;
+            pointer-events: none;
+        }
+        .splash.active {
+            animation: splashAnim 0.8s ease-out forwards;
+        }
+        @keyframes splashAnim {
+            0% { transform: translateX(-50%) scale(0); opacity: 0.9; }
+            50% { transform: translateX(-50%) scale(1.2); opacity: 0.5; }
+            100% { transform: translateX(-50%) scale(2.5); opacity: 0; }
+        }
+
+        /* --- Message Reader --- */
+        #read-modal {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 300;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+        #read-modal.active { display: flex; }
+
+    </style>
+</head>
+<body>
+
+    <!-- Environment -->
+    <div id="sky">
+        <div class="milky-way"></div>
+        <!-- Stars injected via JS -->
+    </div>
+    
+    <div id="ocean">
+        <div class="reflection"></div>
+        <div class="wave-layer wave-shape w1"></div>
+        <div class="wave-layer wave-shape w2"></div>
+        <div class="wave-layer wave-shape w3"></div>
+        <div class="wave-layer wave-shape w4"></div>
+        <!-- Floating bottles injected here -->
+    </div>
+
+    <div class="splash" id="main-splash"></div>
+
+    <!-- The Hero Bottle (For animation) -->
+    <div id="hero-bottle" class="bottle-container">
+        <svg class="bottle-svg" viewBox="0 0 100 250">
+            <defs>
+                <linearGradient id="glassGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:rgba(255,255,255,0.1)" />
+                    <stop offset="20%" style="stop-color:rgba(100,200,210,0.3)" />
+                    <stop offset="50%" style="stop-color:rgba(100,200,210,0.1)" />
+                    <stop offset="80%" style="stop-color:rgba(100,200,210,0.3)" />
+                    <stop offset="100%" style="stop-color:rgba(255,255,255,0.2)" />
+                </linearGradient>
+            </defs>
+
+            <!-- Back Glass -->
+            <path d="M30,0 L70,0 L75,10 L75,60 L90,80 L90,230 Q90,250 50,250 Q10,250 10,230 L10,80 L25,60 L25,10 L30,0 Z" 
+                  fill="rgba(20,50,60,0.4)" stroke="rgba(100,200,210,0.3)" stroke-width="1" />
+
+            <!-- The Paper Scroll -->
+            <g id="svg-scroll" transform="translate(50, 160) rotate(-5) scale(0.9)">
+                <path d="M-25,-40 Q0,-35 25,-40 L25,40 Q0,45 -25,40 Z" fill="#f4e4bc" stroke="#d4c49c" stroke-width="1"/>
+                <ellipse cx="0" cy="-40" rx="25" ry="5" fill="#e4d4ac" stroke="#d4c49c" stroke-width="1"/>
+                <path d="M-25,0 Q0,10 25,0" fill="none" stroke="#8B0000" stroke-width="2"/>
+            </g>
+
+            <!-- Front Glass & Highlights -->
+            <path d="M30,0 L70,0 L75,10 L75,60 L90,80 L90,230 Q90,250 50,250 Q10,250 10,230 L10,80 L25,60 L25,10 L30,0 Z" 
+                  fill="url(#glassGradient)" stroke="rgba(150,240,255,0.4)" stroke-width="1" />
+            
+            <path d="M20,90 Q25,150 20,220" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+            <path d="M80,90 Q75,150 80,220" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1" stroke-linecap="round"/>
+            <path d="M35,20 L35,50" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2" stroke-linecap="round"/>
+
+            <!-- Cork -->
+            <path d="M32,2 L68,2 L65,15 L35,15 Z" fill="#8B4513"/>
+        </svg>
+    </div>
+
+    <!-- UI Layer -->
+    <div id="ui-layer">
+        <h1 class="title-text">
+            Whispers in the Ether
+        </h1>
+        <button class="interactive btn-main" onclick="openWriteModal()">
+            Cast a Message
+        </button>
+    </div>
+
+    <!-- Writing Modal -->
+    <div id="write-modal">
+        <div class="paper-sheet">
+            <textarea id="message-input" placeholder="Write your secret here... No one knows who you are..."></textarea>
+            <div class="flex justify-end gap-4 mt-auto">
+                <button onclick="closeWriteModal()" class="text-gray-600 hover:text-black font-sans uppercase text-sm font-bold tracking-widest px-4 py-2 transition-colors">Discard</button>
+                <button onclick="throwBottle()" class="bg-[#8B4513] text-[#f4e4bc] font-sans uppercase text-sm font-bold tracking-widest px-6 py-2 rounded shadow-lg hover:bg-[#6d360f] transition-all hover:scale-105">Seal & Throw</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reading Modal -->
+    <div id="read-modal" onclick="closeReadModal()">
+        <div class="paper-sheet interactive" onclick="event.stopPropagation()" style="transform: rotate(0deg) scale(0.9);">
+            <p id="read-content" class="font-[Dancing_Script] text-2xl text-[#3e2723] leading-relaxed p-4 h-full overflow-y-auto"></p>
+            <div class="text-center mt-4 pt-4 border-t border-[#d4c49c]">
+                <button onclick="closeReadModal()" class="text-gray-500 font-sans text-xs uppercase tracking-widest hover:text-gray-800 transition-colors">Close Note</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Init ---
+        const firebaseConfig = {
+  apiKey: "AIzaSyBFt8bp6MBsHYgzrJKltROJAsNR_H65GC4",
+  authDomain: "messageinbottle-e8646.firebaseapp.com",
+  projectId: "messageinbottle-e8646",
+  storageBucket: "messageinbottle-e8646.firebasestorage.app",
+  messagingSenderId: "183688037596",
+  appId: "1:183688037596:web:42031278c1ff33a6326019",
+  measurementId: "G-JGLFKLW4HS"
+};
+        /* const firebaseConfig = JSON.parse(__firebase_config); */
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // State to track locally thrown bottles to avoid duplication when listener fires
+        const seenBottleIds = new Set();
+        let currentUser = null;
+
+        // Auth Flow
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+        };
+        initAuth();
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                setupRealtimeListener();
+            }
+        });
+
+        // --- Star System ---
+        const sky = document.getElementById('sky');
+        const starCount = 200;
+
+        function createStars() {
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                const x = Math.random() * 100;
+                const y = Math.random() * 65;
+                const size = Math.random() * 1.5 + 0.5;
+                const duration = Math.random() * 3 + 2;
+                const delay = Math.random() * 5;
+
+                star.style.left = `${x}%`;
+                star.style.top = `${y}%`;
+                star.style.width = `${size}px`;
+                star.style.height = `${size}px`;
+                star.style.setProperty('--duration', `${duration}s`);
+                star.style.setProperty('--delay', `${delay}s`);
+
+                sky.appendChild(star);
+            }
+        }
+        createStars();
+
+        function triggerShootingStar() {
+            const star = document.createElement('div');
+            star.className = 'shooting-star';
+            star.style.top = `${Math.random() * 40}%`;
+            star.style.left = `${Math.random() * 50 + 50}%`;
+            sky.appendChild(star);
+            setTimeout(() => { star.remove(); }, 2000);
+            setTimeout(triggerShootingStar, Math.random() * 10000 + 5000);
+        }
+        setTimeout(triggerShootingStar, 3000);
+
+
+        // --- Bottle Logic ---
+        const uiLayer = document.getElementById('ui-layer');
+        const writeModal = document.getElementById('write-modal');
+        const heroBottle = document.getElementById('hero-bottle');
+        const splash = document.getElementById('main-splash');
+        const ocean = document.getElementById('ocean');
+        const messageInput = document.getElementById('message-input');
+        const readModal = document.getElementById('read-modal');
+        const readContent = document.getElementById('read-content');
+
+        // Global functions for HTML access
+        window.openWriteModal = function() {
+            writeModal.classList.add('active');
+            uiLayer.style.opacity = '0';
+        }
+
+        window.closeWriteModal = function() {
+            writeModal.classList.remove('active');
+            uiLayer.style.opacity = '1';
+        }
+
+        window.closeReadModal = function() {
+            readModal.classList.remove('active');
+        }
+
+        window.throwBottle = async function() {
+            const msg = messageInput.value.trim();
+            if (!msg) return;
+
+            // Generate a unique ID for this specific throw action
+            const tempId = Date.now().toString() + Math.random().toString().slice(2);
+
+            window.closeWriteModal();
+            
+            // Randomize Throw Details
+            const targetLeft = Math.random() * 80 + 10; 
+            const distFromCenter = targetLeft - 50; 
+            const targetScale = Math.random() * 0.4 + 0.3; // 0.3 to 0.7
+            const targetBottom = (targetScale * 20) + 15; 
+
+            // Animation Config
+            heroBottle.style.setProperty('--throw-offset', `${distFromCenter}vw`);
+            heroBottle.style.setProperty('--throw-scale', targetScale);
+            heroBottle.style.setProperty('--throw-bottom', `${targetBottom}%`);
+
+            // Start Animation
+            heroBottle.className = 'bottle-container';
+            void heroBottle.offsetWidth; 
+            heroBottle.classList.add('bottle-prepare');
+
+            setTimeout(() => {
+                heroBottle.classList.remove('bottle-prepare');
+                heroBottle.classList.add('bottle-throw');
+
+                setTimeout(async () => {
+                    // Splash
+                    splash.style.left = `${targetLeft}%`;
+                    splash.style.bottom = `${targetBottom}%`;
+                    splash.classList.add('active');
+                    setTimeout(() => { 
+                        splash.classList.remove('active');
+                        splash.style.left = ''; 
+                        splash.style.bottom = '';
+                    }, 800);
+
+                    // Optimistic Render: Show it immediately locally
+                    createFloatingBottle(msg, false, targetLeft, targetScale, targetBottom);
+                    seenBottleIds.add(tempId); // Track it so we don't double render
+
+                    // Persist to Firebase
+                    if (currentUser) {
+                        try {
+                            await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'bottles'), {
+                                message: msg,
+                                left: targetLeft,
+                                scale: targetScale,
+                                bottom: targetBottom,
+                                throwId: tempId, // Use this to identify our own echo
+                                timestamp: serverTimestamp()
+                            });
+                        } catch (e) {
+                            console.error("Error casting bottle into the ether:", e);
+                        }
+                    }
+
+                    // Reset Hero
+                    heroBottle.style.opacity = '0'; 
+                    setTimeout(() => {
+                        heroBottle.className = 'bottle-container';
+                        heroBottle.style.opacity = '';
+                        heroBottle.style.removeProperty('--throw-offset');
+                        heroBottle.style.removeProperty('--throw-scale');
+                        heroBottle.style.removeProperty('--throw-bottom');
+                        uiLayer.style.opacity = '1';
+                        messageInput.value = ''; 
+                    }, 1000);
+
+                }, 2400); 
+
+            }, 1000); 
+        }
+
+        // --- Real-time Listener ---
+        function setupRealtimeListener() {
+            // Listen to ALL bottles
+            const q = collection(db, 'artifacts', appId, 'public', 'data', 'bottles');
+            
+            onSnapshot(q, (snapshot) => {
+                snapshot.docChanges().forEach((change) => {
+                    if (change.type === "added") {
+                        const data = change.doc.data();
+                        // Only render if we haven't seen this throwId locally
+                        // (This handles both historical loading and new throws from others)
+                        // Note: older docs might not have throwId, so we check existence
+                        if (data.throwId && seenBottleIds.has(data.throwId)) {
+                            // This is our own just-thrown bottle, skip
+                            return;
+                        }
+                        
+                        // Add to seen to prevent future dupes
+                        if (data.throwId) seenBottleIds.add(data.throwId);
+                        
+                        // Render
+                        createFloatingBottle(data.message, true, data.left, data.scale, data.bottom);
+                    }
+                });
+            }, (error) => {
+                console.error("The ocean is silent...", error);
+            });
+        }
+
+        function createFloatingBottle(message, isInstant = false, overrideLeft, overrideScale, overrideBottom) {
+            const bottle = document.createElement('div');
+            bottle.className = 'bottle-float';
+            
+            // Fallbacks just in case data is missing
+            const left = overrideLeft ?? (Math.random() * 80 + 10);
+            const scale = overrideScale ?? (Math.random() * 0.4 + 0.3);
+            const baseBottom = overrideBottom ?? ((scale * 20) + 15);
+            
+            const zIndex = Math.floor(scale * 100);
+            
+            // Randomize float animation phases to prevent unison bobbing
+            const animDurationY = 3 + Math.random() * 2; 
+            const animDurationRot = 4 + Math.random() * 3;
+
+            bottle.style.left = `${left}%`;
+            bottle.style.setProperty('--base-bottom', `${baseBottom}%`);
+            bottle.style.setProperty('--scale', scale);
+            
+            bottle.style.animationDuration = `${animDurationY}s, ${animDurationRot}s, 40s`;
+            bottle.style.zIndex = zIndex;
+
+            // Clone the SVG from the hero bottle
+            bottle.innerHTML = heroBottle.innerHTML;
+            
+            bottle.onclick = () => {
+                readContent.textContent = message;
+                readModal.classList.add('active');
+            };
+
+            if (!isInstant) {
+                // If this is a new local throw, fade it in
+                bottle.style.opacity = '1'; 
+                bottle.animate([{opacity: 0}, {opacity: 1}], {duration: 200});
+                ocean.appendChild(bottle);
+            } else {
+                // If loading from history or other users, pop it in
+                ocean.appendChild(bottle);
+            }
+        }
+    </script>
+</body>
+</html>
